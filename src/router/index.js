@@ -17,9 +17,9 @@ const routeOptions = [
   { path: 'cliente/cadastrar', name: 'cliente/ClienteCreate' },
   { path: 'cliente/:id', name: 'cliente/ClienteEdit' },
 
-  { path: 'item-servico', name: 'item-servico/ItemServicoList', meta: { authorize: 'change_servico' } },
-  { path: 'item-servico/cadastrar', name: 'item-servico/ItemServicoCreate', meta: { authorize: 'change_servico' } },
-  { path: 'item-servico/:id', name: 'item-servico/ItemServicoEdit', meta: { authorize: 'change_servico' } },
+  { path: 'item-servico', name: 'item-servico/ItemServicoList' },
+  { path: 'item-servico/cadastrar', name: 'item-servico/ItemServicoCreate' },
+  { path: 'item-servico/:id', name: 'item-servico/ItemServicoEdit' },
 
   { path: 'servico', name: 'servico/ServicoList', meta: { authorize: 'change_servico' } },
   { path: 'servico/cadastrar', name: 'servico/ServicoCreate', meta: { authorize: 'change_servico' } },

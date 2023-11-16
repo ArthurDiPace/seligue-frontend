@@ -15,6 +15,7 @@
               v-model="itemServico.descricao"
               label="Descrição"
               :error-messages="errors.descricao"
+              @input="uppercaseFields('descricao')"
             />
           </v-col>
         </v-row>
@@ -40,42 +41,47 @@
   </v-container>
 </template>
   
-  <script>
-  import SPagebar from '@/layout/SPagebar.vue'
-  export default {
-    name: 'ItemServicoCreate',
-    components: { SPagebar },
-    data: () => ({
-      breadcrumbs: [
-        {
-          'text': 'Item Servico',
-          'to': '/item-servico',
-          'exact': true
-        },
-        {
-          'text': 'Cadastrar',
-          'disabled': true
-        }
-      ],
-      itemServico: {},
-      errors: {}
-    }),
-    methods: {
-      salvar() {
-        const response = this.$api.create({
-          resource: this.$endpoints.SERVICO_ITEM,
-          data: this.itemServico
-        })
-        response
-          .then(()=>{
-            this.$toast.open({
-                message: 'Serviço salvo com sucesso',
-                type: 'success',
-            })
-            this.$router.back()
-          })
-          .catch(error=>this.errors = this.handleError(error))
+<script>
+import SPagebar from '@/layout/SPagebar.vue'
+export default {
+  name: 'ItemServicoCreate',
+  components: { SPagebar },
+  data: () => ({
+    breadcrumbs: [
+      {
+        'text': 'Item Servico',
+        'to': '/item-servico',
+        'exact': true
       },
-    }
+      {
+        'text': 'Cadastrar',
+        'disabled': true
+      }
+    ],
+    itemServico: {
+      descricao:'',
+    },
+    errors: {}
+  }),
+  methods: {
+    salvar() {
+      const response = this.$api.create({
+        resource: this.$endpoints.SERVICO_ITEM,
+        data: this.itemServico
+      })
+      response
+        .then(()=>{
+          this.$toast.open({
+              message: 'Serviço salvo com sucesso',
+              type: 'success',
+          })
+          this.$router.back()
+        })
+        .catch(error=>this.errors = this.handleError(error))
+    },
+    uppercaseFields(field) {
+      this.itemServico[field] = this.itemServico[field].toUpperCase();
+    },
   }
-  </script>
+}
+</script>

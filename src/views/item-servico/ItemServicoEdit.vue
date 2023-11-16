@@ -15,6 +15,7 @@
               v-model="itemServico.descricao"
               label="Descrição"
               :error-messages="errors.descricao"
+              @input="uppercaseFields('descricao')"
             />
           </v-col>
         </v-row>
@@ -40,52 +41,57 @@
   </v-container>
 </template>
   
-  <script>
-  import SPagebar from '@/layout/SPagebar.vue'
-  export default {
-    name: 'ItemServicoEdit',
-    components: { SPagebar },
-    data: () => ({
-      breadcrumbs: [
-        {
-          'text': 'Item Servico',
-          'to': '/item-servico',
-          'exact': true
-        },
-        {
-          'text': 'Editar',
-          'disabled': true
-        }
-      ],
-      itemServico: {},
-      errors: {}
-    }),
-    created(){
-      this.getItemServico(this.$route.params.id)
+<script>
+import SPagebar from '@/layout/SPagebar.vue'
+export default {
+  name: 'ItemServicoEdit',
+  components: { SPagebar },
+  data: () => ({
+    breadcrumbs: [
+      {
+        'text': 'Item Servico',
+        'to': '/item-servico',
+        'exact': true
+      },
+      {
+        'text': 'Editar',
+        'disabled': true
+      }
+    ],
+    itemServico: {},
+    errors: {}
+  }),
+  created(){
+    this.getItemServico(this.$route.params.id)
+  },
+  methods: {
+    async getItemServico(id) {
+      const response = await this.$api.get({
+        resource: this.$endpoints.SERVICO_ITEM,
+        id: id
+      })
+      this.itemServico = response.data
     },
-    methods: {
-      async getItemServico(id) {
-        const response = await this.$api.get({
-          resource: this.$endpoints.SERVICO_ITEM,
-          id: id
-        })
-        this.itemServico = response.data
-      },
-      salvar() {
-        const response = this.$api.create({
-          resource: this.$endpoints.SERVICO_ITEM,
-          data: this.itemServico
-        })
-        response
-          .then(()=>{
-            this.$toast.open({
-                message: 'Serviço salvo com sucesso',
-                type: 'success',
-            })
-            this.$router.back()
+    uppercaseFields(field) {
+      this.itemServico[field] = this.itemServico[field].toUpperCase();
+    },
+    async salvar() {
+      const response = this.$api.update({
+        resource: this.$endpoints.SERVICO_ITEM,
+        id: this.itemServico.id,
+        data: this.itemServico
+      })
+      response
+        .then(()=>{
+          this.$toast.open({
+              message: 'Serviço salvo com sucesso',
+              type: 'success',
           })
-          .catch(error=>this.errors = this.handleError(error))
-      },
-    }
+          this.$router.back()
+        })
+        .catch(error=>this.errors = this.handleError(error))
+    },
+    
   }
-  </script>
+}
+</script>

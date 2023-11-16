@@ -79,7 +79,10 @@
           </template>
           <template #[`item.servico`]="{ item }">
             <span v-if="item.itens_servico && item.itens_servico.length > 0">
-              <li v-for="(itemServico, index) in item.itens_servico" :key="index">
+              <li
+                v-for="(itemServico, index) in item.itens_servico"
+                :key="index"
+              >
                 {{ itemServico.descricao }}
               </li>
             </span>
@@ -160,6 +163,12 @@
       {text: 'ILUMINAÇÃO', value: 'iluminacao'},
       {text: 'GERAL', value: 'geral'},
       ],
+      itensParecer: [
+        {text: 'Pendente', value: 'pendente'},
+        {text: 'Aprovado', value: 'aprovado'},
+        {text: 'Aprovado com Ressalva', value: 'aprovado_com_ressalva'},
+        {text: 'Reprovado', value: 'reprovada'},
+      ],
       totalItems: 0,
       items: [],
       options: {},
@@ -172,12 +181,6 @@
         categoria: null,
         parecer: null,
       },
-      itensParecer: [
-        {text: 'Pendente', value: 'pendente'},
-        {text: 'Aprovado', value: 'aprovado'},
-        {text: 'Aprovado com Ressalva', value: 'aprovado_com_ressalva'},
-        {text: 'Reprovado', value: 'reprovada'},
-      ],
     }),
     watch: {
       options: {

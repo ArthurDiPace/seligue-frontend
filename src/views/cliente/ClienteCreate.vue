@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <s-pagebar
-      page-title="Incluir pessoa"
+      page-title="Incluir Cliente"
       :breadcrumbs="breadcrumbs"
     />
     <v-card flat>
@@ -12,9 +12,10 @@
             sm="12"
           >
             <v-radio-group
-              v-model="pessoa.tipo"
+              v-model="cliente.tipo"
               row
               class="required"
+              :error-messages="errors.tipo"
             >
               <v-radio
                 label="Pessoa Física"
@@ -31,25 +32,12 @@
             md="3"
             sm="12"
           >
-            <v-autocomplete
-              v-model="pessoa.funcao"
-              :items="_funcoes"
-              label="Função"
-              class="required"
-              :error-messages="errors.funcao"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="3"
-            sm="12"
-          >
             <v-text-field
-              v-model="pessoa.numero_documento"
-              :label="pessoa.tipo=='fisica' ? 'CPF' : 'CNPJ'"
+              v-model="cliente.numero_documento"
+              v-mask="['###.###.###-##', '##.###.###/####-##']"
+              :label="cliente.tipo=='fisica' ? 'CPF' : 'CNPJ'"
               class="required"
               :error-messages="errors.numero_documento"
-              @input="consultarCondutor"
             />
           </v-col>
           <v-col
@@ -58,64 +46,25 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.nome"
+              v-model="cliente.nome"
               label="Nome"
               class="required"
               :error-messages="errors.nome"
-              :loading="carregandoCondutor"
+              @input="uppercaseFields('nome')"
             />
           </v-col>
           <v-col
-            v-if="pessoa.tipo=='fisica'"
+            v-if="cliente.tipo=='fisica'"
             cols="12"
             md="3"
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.data_nascimento"
+              v-model="cliente.data_nascimento"
+              v-mask="['##/##/####']"
               label="Data de Nascimento"
               class="required"
               :error-messages="errors.data_nascimento"
-              :loading="carregandoCondutor"
-            />
-          </v-col>
-          <v-col
-            v-if="pessoa.tipo=='fisica'"
-            cols="12"
-            md="3"
-            sm="12"
-          >
-            <v-text-field
-              v-model="pessoa.cnh"
-              label="CNH"
-              :error-messages="errors.cnh"
-              :loading="carregandoCondutor"
-            />
-          </v-col>
-          <v-col
-            v-if="pessoa.tipo=='fisica'"
-            cols="12"
-            md="3"
-            sm="12"
-          >
-            <v-text-field
-              v-model="pessoa.cnh_categoria"
-              label="Categoria CNH"
-              :error-messages="errors.cnh_categoria"
-              :loading="carregandoCondutor"
-            />
-          </v-col>
-          <v-col
-            v-if="pessoa.tipo=='fisica'"
-            cols="12"
-            md="3"
-            sm="12"
-          >
-            <v-text-field
-              v-model="pessoa.cnh_validade"
-              label="Validade CNH"
-              :error-messages="errors.cnh_validade"
-              :loading="carregandoCondutor"
             />
           </v-col>
           <v-col
@@ -124,7 +73,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.cep"
+              v-model="cliente.cep"
               v-mask="['########']"
               label="CEP"
               class="required"
@@ -142,7 +91,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.endereco"
+              v-model="cliente.endereco"
               label="Endereço"
               class="required"
               :error-messages="errors.endereco"
@@ -156,7 +105,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.numero"
+              v-model="cliente.numero"
               label="Número"
               class="required"
               :error-messages="errors.numero"
@@ -168,7 +117,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.complemento"
+              v-model="cliente.complemento"
               label="Complemento"
               :error-messages="errors.complemento"
             />
@@ -179,7 +128,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.bairro"
+              v-model="cliente.bairro"
               label="Bairro"
               class="required"
               :error-messages="errors.bairro"
@@ -193,7 +142,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.municipio"
+              v-model="cliente.municipio"
               label="Município"
               class="required"
               :error-messages="errors.municipio"
@@ -207,7 +156,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.uf"
+              v-model="cliente.uf"
               label="UF"
               class="required"
               :error-messages="errors.uf"
@@ -221,7 +170,7 @@
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.telefone"
+              v-model="cliente.telefone"
               v-mask="['(##) ####-####', '(##) #####-####']"
               label="Telefone"
               class="required"
@@ -229,51 +178,17 @@
             />
           </v-col>
           <v-col
-            v-if="categoria=='turismo'"
             cols="12"
-            md="6"
+            md="3"
             sm="12"
           >
             <v-text-field
-              v-model="pessoa.inscricao_municipal"
-              label="Inscrição Municipal"
+              v-model="cliente.email"
+              label="E-mail"
               class="required"
-              :error-messages="errors.inscricao_municipal"
+              :error-messages="errors.email"
+              @input="uppercaseFields('email')"
             />
-          </v-col>
-          <v-col
-            v-if="categoria=='turismo'"
-            cols="12"
-            md="6"
-            sm="12"
-          >
-            <v-text-field
-              v-model="pessoa.registro_ministerio_turismo"
-              label="Registro Ministério de Turismo"
-              class="required"
-              :error-messages="errors.registro_ministerio_turismo"
-            />
-          </v-col>
-          <v-col
-            v-if="pessoa.funcao=='permissionario' && categoria=='taxi'"
-            cols="12"
-            sm="12"
-          >
-            <v-autocomplete
-              v-model="pessoa.ponto"
-              :items="pontos"
-              label="Ponto"
-              class="required"
-              item-value="id"
-              :error-messages="errors.ponto"
-            >
-              <template #item="{ item }">
-                {{ item.numero }} - {{ item.endereco }}
-              </template>
-              <template #selection="{ item }">
-                {{ item.numero }} - {{ item.endereco }}
-              </template>
-            </v-autocomplete>
           </v-col>
         </v-row>
       </v-card-text>
@@ -299,116 +214,88 @@
   </v-container>
 </template>
   
-  <script>
-  import SPagebar from '@/layout/SPagebar.vue'
-  import * as ViaCepService from '@/services/cep.service'
-  import PromptDialog from '@/components/PromptDialog.vue'
-  
-  export default {
-    name: 'PessoaCreate',
-    components: { SPagebar, PromptDialog },
-    data: () => ({
-      carregando: false,
-      carregandoCondutor: false,
-      breadcrumbs: [
-        {
-          'text': 'Permissões',
-          'to': '/permissao',
-          'exact': true
-        },
-        {
-          'text': 'Detalhes',
-          'disabled': true
-        },
-        {
-          'text': 'Incluir pessoa',
-          'disabled': true
-        }
-      ],
-      funcoes: [
-        {text: 'Permissionário', value: 'permissionario'},
-        {text: 'Auxiliar', value: 'auxiliar', categorias: ['turismo', 'escolar', 'taxi']},
-        {text: 'Acompanhante', value: 'acompanhante', categorias: ['escolar'] },
-        {text: 'Cooperado', value: 'cooperado', categorias: ['turismo']},
-        {text: 'Condutor', value: 'condutor', categorias: ['fretamento']},
-      ],
-      pontos: [],
-      pessoa: {
-        tipo: 'fisica',
-        nome: '',
-        cnh: '',
-        cnh_categoria: '',
-        cnh_validade: null,
-        endereco: '',
-        complemento: '',
-        bairro: '',
-        municipio: '',
-        uf: '',
+<script>
+import SPagebar from '@/layout/SPagebar.vue'
+import * as ViaCepService from '@/services/cep.service'
+import PromptDialog from '@/components/PromptDialog.vue'
+
+export default {
+  name: 'ClienteCreate',
+  components: { SPagebar, PromptDialog },
+  data: () => ({
+    carregando: false,
+    breadcrumbs: [
+      {
+        'text': 'Cliente',
+        'to': '/clientes',
+        'exact': true
       },
-      errors: {},
-      categoria: '',
-      disabledEndereco: true,
-    }),
-    computed: {
-      _funcoes() {
-        return this.funcoes.filter(item=> !item.categorias || item.categorias.includes(this.categoria))
+      {
+        'text': 'Incluir cliente',
+        'disabled': true
       }
+    ],
+    cliente: {
+      tipo: '',
+      nome: '',
+      numero_documento: '',
+      endereco: '',
+      complemento: '',
+      bairro: '',
+      municipio: '',
+      uf: '',
+      email: '',
     },
-    created() {
-      this.pessoa.permissao = this.$route.query.permissao
-      this.categoria = this.$route.query.categoria
-      this.getPontos()
+    errors: {},
+    disabledEndereco: true,
+  }),
+  methods: {
+    uppercaseFields(field) {
+      this.cliente[field] = this.cliente[field].toUpperCase();
     },
-    methods: {
-      async getPontos() {
-        const response = await this.$api.list({
-          resource: this.$endpoints.PONTO
+    async salvar() {
+      const response = this.$api.create({
+        resource: this.$endpoints.CLIENTE,
+        data: this.cliente
+      })
+      response
+        .then(()=>{
+          this.$toast.open({
+              message: 'Registro salvo com sucesso',
+              type: 'success',
+          })
+          this.$router.back()
         })
-        this.pontos = response.data.results
-      },
-      async salvar() {
-        const response = this.$api.create({
-          resource: this.$endpoints.PESSOA,
-          data: this.pessoa
+        .catch(error=>{
+          this.errors = this.handleError(error)
         })
-        response
-          .then(()=>{
-            this.$toast.open({
-                message: 'Registro salvo com sucesso',
-                type: 'success',
-            })
-            this.$router.back()
+    },
+    consultarCep(cep) {
+      if(cep && cep.length == 8) {
+        this.carregando = true
+        this.disabledEndereco = true
+        ViaCepService.buscarEndereco(cep).then(response => {
+          Object.assign(this.cliente, {
+            endereco: response.data.logradouro,
+            complemento: response.data.complemento,
+            bairro: response.data.bairro,
+            municipio: response.data.localidade,
+            uf: response.data.uf
           })
-          .catch(error=>{
-            this.errors = this.handleError(error)
-          })
-      },
-      consultarCep(cep) {
-        if(cep && cep.length == 8) {
-          this.carregando = true
-          this.disabledEndereco = true
-          ViaCepService.buscarEndereco(cep).then(response => {
-            Object.assign(this.pessoa, {
-              endereco: response.data.logradouro,
-              complemento: response.data.complemento,
-              bairro: response.data.bairro,
-              municipio: response.data.localidade,
-              uf: response.data.uf
-            })
-            this.carregando = false
-          })
-        }
-        if(cep == '58000000') {
-          this.disabledEndereco = false
-        }
+          this.carregando = false
+        })
+      }
+      if(cep == '58000000') {
+        this.disabledEndereco = false
       }
     }
   }
-  </script>
-  
-  <style>
-  .required label::after {
-      content: "*";
-      color: red;
-  }
-  </style>
+}
+</script>
+
+<style>
+.required label::after {
+    content: "*";
+    color: red;
+}
+</style>
