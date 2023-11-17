@@ -153,7 +153,7 @@
           >
             <v-text-field
               v-model="equipamento.horimetro"
-              label="horimetro"
+              label="Horimetro"
               class="required"
               :error-messages="errors.horimetro"
             />
@@ -169,6 +169,18 @@
               class="required"
               :items="status"
               :error-messages="errors.status"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="12"
+            md="9"
+          >
+            <v-text-field
+              v-model="equipamento.observacao"
+              label="Observação"
+              :error-messages="errors.observacao"
+              @input="toUpperCase('observacao')"
             />
           </v-col>
         </v-row>
@@ -195,92 +207,81 @@
   </v-container>
 </template>
   
-  <script>
-  import SPagebar from '@/layout/SPagebar.vue'
-  import PromptDialog from '@/components/PromptDialog.vue'
-  
-  export default {
-    name: 'EquipamentoCreate',
-    components: { SPagebar, PromptDialog },
-    data: () => ({
-      breadcrumbs: [
-        {
-          'text': 'Equipamento',
-          'to': '/equipamento',
-          'exact': true
-        },
-        {
-          'text': 'Detalhes',
-          'disabled': true
-        },
-        {
-          'text': 'Incluir equipamento',
-          'disabled': true
-        }
-      ],
-      categorias: [
+<script>
+import SPagebar from '@/layout/SPagebar.vue'
+import PromptDialog from '@/components/PromptDialog.vue'
+
+export default {
+  name: 'EquipamentoCreate',
+  components: { SPagebar, PromptDialog },
+  data: () => ({
+    breadcrumbs: [
+      {
+        'text': 'Equipamento',
+        'to': '/equipamento',
+        'exact': true
+      },
+      {
+        'text': 'Incluir equipamento',
+        'disabled': true
+      }
+    ],
+    categorias: [
       {text: 'GERADOR', value: 'gerador'},
       {text: 'ILUMINAÇÃO', value: 'iluminacao'},
       {text: 'GERAL', value: 'geral'},
-      ],
-      status:[
-        {text: 'DISPONÍVEL', value: 'disponivel'},
-        {text: 'INDISPONÍVEL', value: 'indisponivel'},
-      ],
-      categoria: {},
-      equipamento: {
-        uf: '',
-        proprietario: '',
-        municipio: '',
-        numero_serie: '',
-        marca_modelo: '',
-        cor: '',
-        ano_fabricacao: '',
-        combustivel: '',
-        restricoes: '',
-        potencia: '',
-        horimetro: '',
-        status:'',
-      },
-      errors: {}
-    }),
-    methods: {
-      toUpperCase(field) {
+    ],
+    status:[
+      {text: 'DISPONÍVEL', value: 'disponivel'},
+      {text: 'INDISPONÍVEL', value: 'indisponivel'},
+    ],
+    categoria: {},
+    equipamento: {
+      uf: '',
+      proprietario: '',
+      municipio: '',
+      numero_serie: '',
+      marca_modelo: '',
+      cor: '',
+      ano_fabricacao: '',
+      combustivel: '',
+      restricoes: '',
+      potencia: '',
+      horimetro: '',
+      status:'',
+    },
+    errors: {}
+  }),
+  methods: {
+    toUpperCase(field) {
       if (this.equipamento[field] && typeof this.equipamento[field] === 'string') {
         this.equipamento[field] = this.equipamento[field].toUpperCase();
       }
     },
-      async getEquipamento() {
-        const response = await this.$api.get({
-          resource: this.$endpoints.EQUIPAMENTO,
-          id: this.equipamento
-        })
-        this.categoria = response.data.categoria
-      },
-      async salvar() {
-        const response = this.$api.create({
-          resource: this.$endpoints.EQUIPAMENTO,
-          data: this.equipamento
-        })
-        response
-          .then(()=>{
-            this.$toast.open({
-                message: 'Equipamento salvo com sucesso',
-                type: 'success',
-            })
-            this.$router.back()
+    async salvar() {
+      const response = this.$api.create({
+        resource: this.$endpoints.EQUIPAMENTO,
+        data: this.equipamento
+      })
+      response
+        .then(()=>{
+          this.$toast.open({
+              message: 'Equipamento salvo com sucesso',
+              type: 'success',
           })
-          .catch(error=>{
-            this.errors = this.handleError(error)
-          })
-      },
-    }
+          this.$router.back()
+        })
+        .catch(error=>{
+          this.errors = this.handleError(error)
+        })
+    },
   }
-  </script>
-  
-  <style>
-  .required label::after {
-      content: "*";
-      color: red;
-  }
-  </style>
+}
+</script>
+
+<style>
+.required label::after {
+    content: "*";
+    color: red;
+}
+</style>
