@@ -1,6 +1,6 @@
 <template> 
   <v-app-bar
-    color="blue-grey darken-4"
+    color="grey darken-1"
     app
     dark
     flat
@@ -34,15 +34,15 @@
   </v-app-bar>
 </template>
   
-  <script>
-  import { clearToken } from '@/services/auth.service'
-  export default {
-      name: 'SAppbar',
-      methods: {
-        logout(){
-          clearToken()
-          this.$router.push('/login')
-        }
+<script>
+import { clearToken } from '@/services/auth.service'
+export default {
+    name: 'SAppbar',
+    methods: {
+      logout(){
+        clearToken()
+        this.$router.push('/login')
       }
-  }
-  </script>
+    }
+}
+</script>

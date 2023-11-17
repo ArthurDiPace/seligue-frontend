@@ -227,7 +227,7 @@ export default {
     breadcrumbs: [
       {
         'text': 'Cliente',
-        'to': '/clientes',
+        'to': '/cliente',
         'exact': true
       },
       {
