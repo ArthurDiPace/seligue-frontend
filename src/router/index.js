@@ -31,19 +31,7 @@ const routeOptions = [
 
   { path: 'veiculo', name: 'veiculo/VeiculoList' },
   { path: 'veiculo/cadastrar', name: 'veiculo/VeiculoCreate' },
-  { path: 'veiculo/:id', name: 'veiculo/VeiculoEdit' },
-
-
-  
-
-  { path: 'taxa', name: 'taxa/TaxaList' },
-  { path: 'taxa/cadastrar', name: 'taxa/TaxaCreate' },
-  { path: 'taxa/:id', name: 'taxa/TaxaEdit' },
-  { path: 'ponto', name: 'ponto/PontoList' },
-  { path: 'ponto/cadastrar', name: 'ponto/PontoCreate' },
-  { path: 'ponto/:id', name: 'ponto/PontoEdit' },
-  { path: 'relatorio', name: 'relatorio/RelatorioList' },
-  
+  { path: 'veiculo/:id', name: 'veiculo/VeiculoEdit' }, 
 ]
 
 const routes = routeOptions.map(route => {

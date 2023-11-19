@@ -10,69 +10,29 @@
         <v-row dense>
           <v-col
             cols="12"
-            md="6"
-            sm="4"
+            md="3"
+            sm="12"
           >
-            <v-menu
-              v-model="menuOpen"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-            >
-              <template #activator="{ on }">
-                <v-text-field
-                  v-model="formattedDate"
-                  label="Data de Entrada"
-                  append-icon="mdi-calendar"
-                  readonly
-                  class="custom-date-field required"
-                  :error-messages="errors.data"
-                  v-on="on"
-                />
-              </template>
-              <v-date-picker
-                v-model="servico.data"
-                no-title
-                scrollable
-                class="custom-date-picker"
-                :error-messages="errors.data"
-                @change="menuOpen = false"
-              />
-            </v-menu>
+            <v-text-field
+              v-model="servico.data"
+              v-mask="['##/##/####']"
+              label="Data de Entrada"
+              class="required"
+              :error-messages="errors.data"
+            />
           </v-col>
           <v-col
             cols="12"
-            md="6"
-            sm="4"
+            md="3"
+            sm="12"
           >
-            <v-menu
-              v-model="menuOpenSaida"
-              :close-on-content-click="false"
-              :nudge-right="40"
-              transition="scale-transition"
-              offset-y
-            >
-              <template #activator="{ on }">
-                <v-text-field
-                  v-model="formattedDateSaida"
-                  label="Data de Saida"
-                  append-icon="mdi-calendar"
-                  readonly
-                  class="custom-date-field required"
-                  :error-messages="errors.data_saida"
-                  v-on="on"
-                />
-              </template>
-              <v-date-picker
-                v-model="servico.data_saida"
-                no-title
-                scrollable
-                class="custom-date-picker"
-                :error-messages="errors.data_saida"
-                @change="menuOpenSaida = false"
-              />
-            </v-menu>
+            <v-text-field
+              v-model="servico.data_saida"
+              v-mask="['##/##/####']"
+              label="Data de Saida"
+              class="required"
+              :error-messages="errors.data_saida"
+            />
           </v-col>
           <v-col
             cols="12"
@@ -96,7 +56,8 @@
             <v-textarea
               v-model="servico.observacao"
               label="Observação do serviço"
-              :error-messages="errors.observacao"        
+              :error-messages="errors.observacao" 
+              @input="toUpperCase('observacao')"       
             />
           </v-col>
           <v-col
@@ -193,6 +154,7 @@
               v-model="servico.funcionario"
               label="Funcionário (Serviço)"
               :items="funcionarios"
+              multiple
               item-text="nome"
               item-value="id"
               :error-messages="errors.funcionario"
@@ -225,40 +187,35 @@
 <script>
 import ConfirmDialog from '@/components/ConfirmDialog.vue'
 import SPagebar from '@/layout/SPagebar.vue'
-import moment from "moment";
 
 export default {
   name: 'ServicoCreate',
   components: { SPagebar, ConfirmDialog },
-  data() {
-    return {
-      breadcrumbs: [
-        { 'text': 'Servico', 'to': '/servico', 'exact': true },
-        { 'text': 'Cadastrar Serviço', 'disabled': true },
-      ],
-      servico: {
-        data: null,
-        data_saida: null,
-        observacao: null,
-        itens: null,
-        preco: null,
-        equipamento: null,
+  data: () => ({
+    breadcrumbs: [
+      {
+        'text': 'Serviço',
+        'to': '/servico',
+        'exact': true
       },
-      status: [
-        { text: 'Aprovado', value: 'aprovado' },
-        { text: 'Aprovado com ressalva', value: 'aprovado_com_ressalva' },
-        { text: 'Reprovado', value: 'reprovado' }
-      ],
-      itensServico: {},
-      veiculos: {},
-      equipamentos: {},
-      errors: {},
-      clientes: {},
-      funcionarios: {},
-      menuOpen: false,
-      menuOpenSaida: false,
-    };
-  },
+      {
+        'text': 'Cadastrar serviço',
+        'disabled': true
+      }
+    ],
+    status: [
+      { text: 'Aprovado', value: 'aprovado' },
+      { text: 'Aprovado com ressalva', value: 'aprovado_com_ressalva' },
+      { text: 'Reprovado', value: 'reprovado' }
+    ],
+    servico: {},
+    itensServico: {},
+    veiculos: {},
+    equipamentos: {},
+    clientes: {},
+    funcionarios: {},
+    errors: {},
+  }),
   computed: {
     dynamicMask() {
       const digitCount = (this.servico.preco || "").replace(/\D/g, '').length;
@@ -279,22 +236,18 @@ export default {
         return 'R$ ###.###.###,##';
       }
     },
-    formattedDate() {
-      return this.formatDate(this.servico.data);
-    },
-    formattedDateSaida() {
-      return this.formatDate(this.servico.data_saida);
-    }
   },
   created() {
     this.loadData();
   },
   methods: {
+    toUpperCase(field) {
+      if (this.servico[field] && typeof this.servico[field] === 'string') {
+        this.servico[field] = this.servico[field].toUpperCase();
+      }
+    },
     formatarTexto(item) {
       return `${item.id} - ${item.marca_modelo}`;
-    },
-    formatDate(date) {
-      return date ? moment(date).format("DD/MM/YYYY") : "";
     },
     async loadData() {
       await Promise.all([
@@ -333,7 +286,6 @@ export default {
         id: this.servico.id,
         data: this.servico,
       });
-
       response
         .then(() => {
           this.$toast.open({ message: 'Serviço salvo com sucesso', type: 'success' });
@@ -345,8 +297,6 @@ export default {
     },
     sanitizeData() {
       this.servico.preco = (this.servico.preco || "").replace(/[^\d,]/g, "").replace(",", ".").replace(/(\.\d{0,2})\d*$/, "$1");
-      this.servico.data = this.formatDate(this.servico.data);
-      this.servico.data_saida = this.formatDate(this.servico.data_saida);
     },
   }
 }

@@ -114,7 +114,7 @@
   import SPagebar from '@/layout/SPagebar.vue'
   
   export default {
-      name: "PessoaList",
+      name: "ClienteList",
       components: { PromptDialog, SPagebar },
       props: { disabledButtons: Boolean },
       data: () => ({
@@ -147,8 +147,7 @@
         },
       }),
       watch: {
-        'filtro.nome'(nome) {
-          this.filtro.nome = nome.toUpperCase();
+        'filtro.nome'() {
           this.getClientes();
         },
         'filtro.numero_documento'() {

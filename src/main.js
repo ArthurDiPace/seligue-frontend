@@ -10,6 +10,7 @@ import VueToast from 'vue-toast-notification'
 import VueTheMask from 'vue-the-mask'
 import 'vue-toast-notification/dist/theme-sugar.css'
 
+
 Vue.config.productionTip = false
 
 Vue.prototype.$endpoints = endpoints

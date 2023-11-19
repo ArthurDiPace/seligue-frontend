@@ -1,7 +1,7 @@
 <template>
   <v-container fluid>
     <s-pagebar
-      page-title="Equipamentos"
+      page-title="Veiculos"
       :breadcrumbs="breadcrumbs"
     >
       <v-btn
@@ -9,7 +9,7 @@
         dark
         fab
         small
-        @click="cadastrarEquipamento"
+        @click="cadastrarVeiculo"
       >
         <v-icon>add</v-icon>
       </v-btn>
@@ -25,17 +25,16 @@
             />
           </div>
           <div style="max-width: 500px">
-            <v-autocomplete
-              v-model="filtro.categoria"
-              label="Categoria"
-              :items="categorias"
+            <v-text-field
+              v-model="filtro.marca_modelo"
+              label="Marca/Modelo"
               class="mr-3"
             />
           </div>
           <v-btn
             color="blue-grey darken-4 mr-3"
             dark
-            @click="getEquipamentos"
+            @click="getVeiculos"
           >
             <v-icon>search</v-icon>
             Pesquisar
@@ -62,14 +61,10 @@
             <span v-if="!!item.id">{{ item.id.toString().padStart(4, '0') }}</span>
           </template>
           <template #[`item.categoria`]="{ item }">
-            <span v-if="item.categoria=='gerador'">GERADOR</span>
             <span v-if="item.categoria=='veiculo'">VEICULO</span>
-            <span v-if="item.categoria=='iluminacao'">ILUMINAÇÃO</span>
-            <span v-if="item.categoria=='geral'">GERAL</span>
           </template>
-          <template #[`item.horimetro`]="{ item }">
-            <span v-if="item.categoria === 'veiculo'">{{ item.odometro }} Km</span>
-            <span v-else>{{ item.horimetro }} Horas</span>
+          <template #[`item.odometro`]="{ item }">
+            <span>{{ item.odometro }} Km</span>
           </template>
           <template #[`item.status`]="{ item }">
             <v-chip
@@ -95,7 +90,7 @@
                     v-bind="attrs"
                     icon
                     v-on="on"
-                    @click="editarEquipamento(item.id)"
+                    @click="editarVeiculo(item.id)"
                   >
                     <v-icon class="material-icons-outlined">
                       visibility
@@ -115,28 +110,25 @@
 <script>
 import SPagebar from '@/layout/SPagebar.vue'
 export default {
-  name: 'EquipamentoList',
+  name: 'VeiculoList',
   components: { SPagebar },
   data: () => ({
     breadcrumbs: [
       {
-        'text': 'Equipamentos',
-        'to': '/equipamento',
+        'text': 'Veiculos',
+        'to': '/veiculo',
         'exact': true
       }
     ],
     categorias: [
-      {text: 'GERADOR', value: 'gerador'},
-      {text: 'ILUMINAÇÃO', value: 'iluminacao'},
-      {text: 'GERAL', value: 'geral'},
+      {text: 'VEICULO', value: 'veiculo'},
     ],
     headers: [
       {text: 'Registro', value: 'id'},
       {text: 'Categoria', value: 'categoria'},
       {text: 'Marca/Modelo', value: 'marca_modelo'},
       {text: "Status", value: "status" },
-      {text: "Potência", value: "potencia" },
-      {text: "Horímetro/Odômetro", value: "horimetro"},
+      {text: "Odômetro", value: "odometro"},
       {text: "Observações", value: "observacao" },
       {text: 'Ações', value: 'action'},
       ],
@@ -159,7 +151,7 @@ export default {
   watch: {
     options: {
       handler() {
-        this.getEquipamentos()
+        this.getVeiculos()
       },
       deep: true
     },
@@ -173,13 +165,12 @@ export default {
           marca_modelo: item.marca_modelo.toUpperCase(),
           status: item.status,
           potencia: typeof item.potencia === 'string' ? item.potencia.toUpperCase() : item.potencia,
-          horimetro: typeof item.horimetro === 'string' ? item.horimetro.toUpperCase() : item.horimetro,
           odometro: typeof item.odometro === 'string' ? item.odometro.toUpperCase() : item.odometro,
           observacao: typeof item.observacao === 'string' ? item.observacao.toUpperCase() : item.observacao,
         };
       });
     },
-    async getEquipamentos() {
+    async getVeiculos() {
       const { sortBy, sortDesc, page, itemsPerPage } = this.options
       
       let resetPage = false;
@@ -207,24 +198,24 @@ export default {
         id: this.filtro.id,
       }
       const response = await this.$api.list({
-              resource: this.$endpoints.EQUIPAMENTO,
+              resource: this.$endpoints.VEICULO,
               query: query
           });
           this.items = response.data.results;
           this.totalItems = response.data.count;
     },
-    cadastrarEquipamento() {
-      this.$router.push('/equipamento/cadastrar')
+    cadastrarVeiculo() {
+      this.$router.push('/veiculo/cadastrar')
     },
-    editarEquipamento(id) {
-      this.$router.push(`/equipamento/${id}`)
+    editarVeiculo(id) {
+      this.$router.push(`/veiculo/${id}`)
     },
     limparFiltros() {
       this.filtro = {
         id: null,
         categoria: null,
       }
-      this.getEquipamentos()
+      this.getVeiculos()
     },
   }
 }

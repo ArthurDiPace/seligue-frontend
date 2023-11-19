@@ -244,13 +244,9 @@ export default {
     carregando: false,
     breadcrumbs: [
       {
-        'text': 'VeiculoCreate',
+        'text': 'Veiculos',
         'to': '/veiculo',
         'exact': true
-      },
-      {
-        'text': 'Detalhes',
-        'disabled': true
       },
       {
         'text': 'Incluir veículo',

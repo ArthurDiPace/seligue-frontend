@@ -7,6 +7,19 @@
     <v-card flat>
       <v-card-text>
         <v-row dense>
+          <!-- <v-col
+            cols="12"
+            sm="12"
+            md="1"
+          >
+            <v-autocomplete
+              v-model="veiculo.categoria"
+              label="Categoria"
+              class="required"
+              :items="categorias"
+              :error-messages="errors.categoria"
+            />
+          </v-col> -->
           <v-col
             cols="12"
             sm="12"
@@ -15,7 +28,9 @@
             <v-text-field
               v-model="veiculo.placa"
               label="Placa"
+              class="required"
               :error-messages="errors.placa"
+              @input="toUpperCase('placa')"
             />
           </v-col>
           <v-col
@@ -26,8 +41,9 @@
             <v-text-field
               v-model="veiculo.uf"
               label="UF"
-              readonly
+              class="required"
               :error-messages="errors.uf"
+              @input="toUpperCase('uf')"
             />
           </v-col>
           <v-col
@@ -38,8 +54,9 @@
             <v-text-field
               v-model="veiculo.municipio"
               label="Município"
-              readonly
+              class="required"
               :error-messages="errors.municipio"
+              @input="toUpperCase('municipio')"
             />
           </v-col>
           <v-col
@@ -50,8 +67,9 @@
             <v-text-field
               v-model="veiculo.proprietario"
               label="Proprietário"
-              readonly
+              class="required"
               :error-messages="errors.proprietario"
+              @input="toUpperCase('proprietario')"
             />
           </v-col>
           <v-col
@@ -62,19 +80,21 @@
             <v-text-field
               v-model="veiculo.chassi"
               label="Chassi"
+              class="required"
               :error-messages="errors.chassi"
             />
           </v-col>
+
           <v-col
             cols="12"
             sm="12"
-            md="1"
+            md="3"
           >
             <v-text-field
-              v-model="veiculo.remarcacao_chassi"
-              label="Remarcação Chassi"
-              readonly
-              :error-messages="errors.remarcacao_chassi"
+              v-model="veiculo.odometro"
+              label="Odometro"
+              class="required"
+              :error-messages="errors.odometro"
             />
           </v-col>
           <v-col
@@ -83,34 +103,11 @@
             md="3"
           >
             <v-text-field
-              v-model="veiculo.desc_tipo"
-              label="Tipo"
-              readonly
-              :error-messages="errors.desc_tipo"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="3"
-          >
-            <v-text-field
-              v-model="veiculo.desc_especie"
-              label="Espécie"
-              readonly
-              :error-messages="errors.desc_especie"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="3"
-          >
-            <v-text-field
-              v-model="veiculo.desc_cor"
+              v-model="veiculo.cor"
               label="Cor"
-              readonly
-              :error-messages="errors.desc_cor"
+              class="required"
+              :error-messages="errors.cor"
+              @input="toUpperCase('cor')"
             />
           </v-col>
           <v-col
@@ -119,10 +116,11 @@
             md="9"
           >
             <v-text-field
-              v-model="veiculo.desc_marca_modelo"
+              v-model="veiculo.marca_modelo"
               label="Marca/Modelo"
-              readonly
-              :error-messages="errors.desc_marca_modelo"
+              class="required"
+              :error-messages="errors.marca_modelo"
+              @input="toUpperCase('marca_modelo')"
             />
           </v-col>
           <v-col
@@ -133,7 +131,7 @@
             <v-text-field
               v-model="veiculo.ano_fabricacao"
               label="Ano Fabricação"
-              readonly
+              class="required"
               :error-messages="errors.ano_fabricacao"
             />
           </v-col>
@@ -145,7 +143,7 @@
             <v-text-field
               v-model="veiculo.ano_modelo"
               label="Ano Modelo"
-              readonly
+              class="required"
               :error-messages="errors.ano_modelo"
             />
           </v-col>
@@ -157,7 +155,7 @@
             <v-text-field
               v-model="veiculo.licenciamento"
               label="Licenciamento"
-              readonly
+              class="required"
               :error-messages="errors.licenciamento"
             />
           </v-col>
@@ -167,22 +165,11 @@
             md="3"
           >
             <v-text-field
-              v-model="veiculo.desc_carroceria"
-              label="Carroceria"
-              readonly
-              :error-messages="errors.desc_carroceria"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="3"
-          >
-            <v-text-field
-              v-model="veiculo.desc_combustivel"
+              v-model="veiculo.combustivel"
               label="Combustível"
-              readonly
-              :error-messages="errors.desc_combustivel"
+              class="required"
+              :error-messages="errors.combustivel"
+              @input="toUpperCase('combustivel')"
             />
           </v-col>
           <v-col
@@ -190,22 +177,11 @@
             sm="12"
             md="3"
           >
-            <v-text-field
-              v-model="veiculo.desc_categoria"
-              label="Categoria"
-              readonly
-              :error-messages="errors.desc_categoria"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="3"
-          >
-            <v-text-field
+            <v-autocomplete
               v-model="veiculo.status"
               label="Status"
-              readonly
+              class="required"
+              :items="status"
               :error-messages="errors.status"
             />
           </v-col>
@@ -217,41 +193,20 @@
               v-model="veiculo.restricoes"
               filled
               label="Restrições"
-              readonly
               :error-messages="errors.restricoes"
+              @input="toUpperCase('restricoes')"
             />
           </v-col>
           <v-col
             cols="12"
             sm="12"
-            md="4"
           >
-            <v-text-field
-              v-model="veiculo.capacidade"
-              label="Capacidade"
-              :error-messages="errors.capacidade"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="4"
-          >
-            <v-text-field
-              v-model="veiculo.taximetro"
-              label="Táximetro"
-              :error-messages="errors.taximetro"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="4"
-          >
-            <v-text-field
-              v-model="veiculo.tacografo"
-              label="Tácografo"
-              :error-messages="errors.tacografo"
+            <v-textarea
+              v-model="veiculo.observacao"
+              filled
+              label="Observação"
+              :error-messages="errors.observacao"
+              @input="toUpperCase('observacao')"
             />
           </v-col>
         </v-row>
@@ -278,88 +233,81 @@
   </v-container>
 </template>
   
-  <script>
-  import SPagebar from '@/layout/SPagebar.vue'
-  import PromptDialog from '@/components/PromptDialog.vue'
-  
-  export default {
-    name: 'VeiculoCreate',
-    components: { SPagebar, PromptDialog },
-    data: () => ({
-      breadcrumbs: [
-        {
-          'text': 'Permissões',
-          'to': '/permissao',
-          'exact': true
-        },
-        {
-          'text': 'Detalhes',
-          'disabled': true
-        },
-        {
-          'text': 'Editar veículo',
-          'disabled': true
-        }
-      ],
-      veiculo: {
-        placa: '',
-        uf: '',
-        proprietario: '',
-        municipio: '',
-        chassi: '',
-        remarcacao_chassi: '',
-        desc_tipo: '',
-        desc_especie: '',
-        desc_marca_modelo: '',
-        desc_cor: '',
-        ano_fabricacao: '',
-        ano_modelo: '',
-        desc_carroceria: '',
-        desc_combustivel: '',
-        desc_categoria: '',
-        status: '',
-        licenciamento: '',
-        restricoes: '',
+<script>
+import SPagebar from '@/layout/SPagebar.vue'
+import PromptDialog from '@/components/PromptDialog.vue'
+
+export default {
+  name: 'VeiculoEdit',
+  components: { SPagebar, PromptDialog },
+  data: () => ({
+    breadcrumbs: [
+      {
+        'text': 'Veiculos',
+        'to': '/veiculo',
+        'exact': true
       },
-      errors: {}
-    }),
-    created() {
-      this.getVeiculo(this.$route.params.id)
+      {
+        'text': 'Editar veículo',
+        'disabled': true
+      }
+    ],
+    categorias: [
+      {text: 'Veiculo', value: 'veiculo'},
+    ],
+    status: [
+      {text: 'DISPONÍVEL', value: 'disponivel'},
+      {text: 'INDISPONÍVEL', value: 'indisponivel'},
+    ],
+    categoria:'veiculo',
+    veiculo: {
+      placa: '',
+      uf: '',
+      proprietario: '',
+      municipio: '',
+      chassi: '',
+      odometro: '',
+      marca_modelo: '',
+      cor: '',
+      ano_fabricacao: '',
+      ano_modelo: '',
+      combustivel: '',
+      status: '',
+      licenciamento: '',
+      restricoes: '',
+      observacao: '',
     },
-    methods: {
-      async getVeiculo(id) {
-        const response = await this.$api.get({
-          resource: this.$endpoints.VEICULO,
-          id: id
-        })
-        this.veiculo = response.data
-      },
-      async salvar() {
-        const res = await this.$refs.prompt.open(
-          'Requerimento',
-          'Informe o número do requerimento',
-          'Número do requerimento'
-        )
-        if (res) {
-          this.veiculo.numero_requerimento = res
-          const response = this.$api.update({
-            resource: this.$endpoints.VEICULO,
-            id: this.veiculo.id,
-            data: this.veiculo
+    errors: {}
+  }),
+  created() {
+    this.getVeiculo(this.$route.params.id)
+  },
+  methods: {
+    async getVeiculo(id) {
+      const response = await this.$api.get({
+        resource: this.$endpoints.VEICULO,
+        id: id
+      })
+      this.veiculo = response.data
+    },
+    async salvar() {
+      const response = this.$api.update({
+        resource: this.$endpoints.VEICULO,
+        id: this.veiculo.id,
+        data: this.veiculo
+      })
+      response
+        .then(()=>{
+          this.$toast.open({
+              message: 'Registro salvo com sucesso',
+              type: 'success',
           })
-          response
-            .then(()=>{
-              this.$toast.open({
-                  message: 'Registro salvo com sucesso',
-                  type: 'success',
-              })
-              this.$router.back()
-            })
-            .catch(error=>{
-              this.errors = this.handleError(error)
-            })
-          }
+          this.$router.back()
+        })
+        .catch(error=>{
+          this.errors = this.handleError(error)
+        })
       }
     }
   }
-  </script>
+</script>

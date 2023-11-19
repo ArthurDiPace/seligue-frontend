@@ -8,9 +8,18 @@
       to="/equipamento"
     >
       <v-icon class="material-icons-outlined mr-2">
-        widgets
+        info
       </v-icon>
       Equipamentos
+    </v-btn>
+    <v-btn
+      text
+      to="/veiculo"
+    >
+      <v-icon class="material-icons-outlined mr-2">
+        widgets
+      </v-icon>
+      Veiculos
     </v-btn>
     <v-btn
       text

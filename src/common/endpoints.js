@@ -6,7 +6,6 @@ const endpoints = {
     SERVICO_ITEM: 'api/item-servico',
     FUNCIONARIO: 'api/funcionario',
     CLIENTE: 'api/cliente',   
-    
   }
   
   export default endpoints

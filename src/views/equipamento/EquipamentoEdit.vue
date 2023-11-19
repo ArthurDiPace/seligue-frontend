@@ -220,17 +220,12 @@ export default {
         'exact': true
       },
       {
-        'text': 'Detalhes',
-        'disabled': true
-      },
-      {
         'text': 'Editar equipamento',
         'disabled': true
       }
     ],
     categorias: [
       {text: 'Gerador', value: 'gerador'},
-      {text: 'Veiculo', value: 'veiculo'},
       {text: 'Iluminacao', value: 'iluminacao'},
       {text: 'Geral', value: 'geral'},
     ],
