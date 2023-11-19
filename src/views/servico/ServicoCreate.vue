@@ -10,32 +10,7 @@
         <v-row dense>
           <v-col
             cols="12"
-            md="3"
-            sm="12"
-          >
-            <v-text-field
-              v-model="servico.data"
-              v-mask="['##/##/####']"
-              label="Data de Entrada"
-              class="required"
-              :error-messages="errors.data"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="3"
-            sm="12"
-          >
-            <v-text-field
-              v-model="servico.data_saida"
-              v-mask="['##/##/####']"
-              label="Data de Saida"
-              class="required"
-              :error-messages="errors.data_saida"
-            />
-          </v-col>
-          <v-col
-            cols="12"
+            md="4"
             sm="12"
           >
             <v-autocomplete
@@ -50,7 +25,6 @@
           </v-col>
           <v-col
             cols="12"
-            md="6"
             sm="12"
           >
             <v-textarea
@@ -62,7 +36,7 @@
           </v-col>
           <v-col
             cols="12"
-            md="6"
+            md="4"
             sm="12"
           >
             <v-autocomplete
@@ -76,7 +50,6 @@
           </v-col>
           <v-col
             cols="12"
-            md="6"
             sm="12"
           >
             <v-text-field
@@ -107,6 +80,7 @@
             <v-col
               v-if="servico.categoria=='equipamento'"
               cols="12"
+              md="4"
               sm="12"
             >
               <v-autocomplete
@@ -121,6 +95,7 @@
             <v-col
               v-if="servico.categoria=='veiculo'"
               cols="12"
+              md="4"
               sm="12"
             >
               <v-autocomplete
@@ -135,7 +110,34 @@
           </v-col>
           <v-col
             cols="12"
+            md="3"
             sm="12"
+          >
+            <v-text-field
+              v-model="servico.data"
+              v-mask="['##/##/####']"
+              label="Data de Entrada"
+              class="required"
+              :error-messages="errors.data"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            md="3"
+            sm="12"
+          >
+            <v-text-field
+              v-model="servico.data_saida"
+              v-mask="['##/##/####']"
+              label="Data de Saida"
+              class="required"
+              :error-messages="errors.data_saida"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="12"
+            md="4"
           >
             <v-autocomplete
               v-model="servico.parecer"
@@ -149,12 +151,12 @@
           <v-col
             cols="12"
             sm="12"
+            md="4"
           >
             <v-autocomplete
               v-model="servico.funcionario"
               label="Funcionário (Serviço)"
               :items="funcionarios"
-              multiple
               item-text="nome"
               item-value="id"
               :error-messages="errors.funcionario"
@@ -208,12 +210,12 @@ export default {
       { text: 'Aprovado com ressalva', value: 'aprovado_com_ressalva' },
       { text: 'Reprovado', value: 'reprovado' }
     ],
-    servico: {},
-    itensServico: {},
-    veiculos: {},
-    equipamentos: {},
-    clientes: {},
-    funcionarios: {},
+    servico:{},
+    itensServico: [],
+    funcionarios:[],
+    veiculos: [],
+    equipamentos: [],
+    clientes: [],
     errors: {},
   }),
   computed: {
@@ -279,7 +281,7 @@ export default {
       this.equipamentos = response.data.results;
     },
     async salvar() {
-      this.sanitizeData();
+      this.servico.preco = (this.servico.preco || "").replace(/[^\d,]/g, "").replace(",", ".").replace(/(\.\d{0,2})\d*$/, "$1");
 
       const response = this.$api.create({
         resource: this.$endpoints.SERVICO,
@@ -294,9 +296,6 @@ export default {
         .catch(error => {
           this.errors = this.handleError(error);
         });
-    },
-    sanitizeData() {
-      this.servico.preco = (this.servico.preco || "").replace(/[^\d,]/g, "").replace(",", ".").replace(/(\.\d{0,2})\d*$/, "$1");
     },
   }
 }

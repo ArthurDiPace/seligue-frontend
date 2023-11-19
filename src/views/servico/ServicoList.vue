@@ -21,7 +21,7 @@
             <v-autocomplete
               v-model="filtro.categoria"
               label="Categoria"
-              :items="categorias"
+              :items="categoria"
               class="mr-3"
             />
           </div>
@@ -157,7 +157,7 @@
         {text: 'Funcionário', value: 'funcionario_nome'},
         {text: 'Ações', value: 'action'},
       ],
-      categorias: [
+      categoria: [
       {text: 'VEICULO', value: 'veiculo'},
       {text: 'GERADOR', value: 'gerador'},
       {text: 'ILUMINAÇÃO', value: 'iluminacao'},
@@ -172,7 +172,6 @@
       totalItems: 0,
       items: [],
       options: {},
-      categoria:{},
       filtro: {
         categoria: '',
         parecer: '',

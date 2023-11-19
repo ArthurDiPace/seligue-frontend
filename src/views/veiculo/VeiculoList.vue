@@ -31,14 +31,14 @@
               class="mr-3"
             />
           </div>
-          <v-btn
+          <!-- <v-btn
             color="blue-grey darken-4 mr-3"
             dark
             @click="getVeiculos"
           >
             <v-icon>search</v-icon>
             Pesquisar
-          </v-btn>
+          </v-btn> -->
           <v-btn
             outlined
             color="blue-grey darken-4"
@@ -133,22 +133,27 @@ export default {
       {text: 'Ações', value: 'action'},
       ],
     categoria:{},
-    id:{},
-    filtro: {
-      id: '',
-      categoria: '',
-    },
     totalItems: 0,
     items: [],
     options: {},
     dialog: false,   
     errors: [],
+    filtro: {
+      id: '',
+      marca_modelo: '',
+    },
     filtroAnterior: {
       id: null,
-      categoria: null,
+      marca_modelo: null,
     },
   }),
   watch: {
+    'filtro.marca_modelo'() {
+      this.getVeiculos();
+    },
+    'filtro.id'() {
+      this.getVeiculos();
+    },
     options: {
       handler() {
         this.getVeiculos()
@@ -180,7 +185,7 @@ export default {
       }
 
       if (
-        this.filtro.categoria !== this.filtroAnterior.categoria ||
+        this.filtro.marca_modelo !== this.filtroAnterior.marca_modelo ||
         this.filtro.id !== this.filtroAnterior.id
       ) {
         resetPage = true;
@@ -194,7 +199,7 @@ export default {
         page: resetPage ? 1 : page,
         page_size: itemsPerPage,
         ordering: ordering,
-        categoria: this.filtro.categoria,
+        marca_modelo: this.filtro.marca_modelo,
         id: this.filtro.id,
       }
       const response = await this.$api.list({
@@ -213,7 +218,7 @@ export default {
     limparFiltros() {
       this.filtro = {
         id: null,
-        categoria: null,
+        marca_modelo: null,
       }
       this.getVeiculos()
     },

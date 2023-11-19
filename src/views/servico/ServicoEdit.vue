@@ -42,10 +42,10 @@
               v-model="servico.itens"
               label="Serviço"
               :items="itensServico"
-              :error-messages="errors.observacao"
-              multiple 
+              multiple
               item-text="descricao"
               item-value="id"
+              :error-messages="errors.observacao"
             />
           </v-col>
           <v-col
@@ -92,8 +92,8 @@
             sm="12"
           >
             <v-text-field
-              v-model="servico.categoria"
-              label="Categoria"
+              v-model="servico.marca_modelo"
+              label="Equipamento"
               class="required"
               readonly
               :error-messages="errors.categoria"
@@ -120,7 +120,6 @@
               v-model="servico.funcionario"
               label="Funcionário (Serviço)"
               :items="funcionarios"
-              multiple
               item-text="nome"
               item-value="id"
               :error-messages="errors.funcionario"
@@ -175,32 +174,72 @@ export default {
       {text: 'Reprovado', value: 'reprovado'}
     ],
     servico: {},
-    veiculo: {},
-    equipamentos: {},
-    clientes: {},
-    funcionarios: {},
+    veiculo: [],
+    equipamentos: [],
+    clientes: [],
+    funcionarios: [],
     itensServico: [],
     errors: {},
   }),
+  computed: {
+    dynamicMask() {
+      const digitCount = (this.servico.preco || "").replace(/\D/g, '').length;
+
+      if (digitCount <= 3) {
+        return 'R$ #,##';
+      } else if (digitCount <= 4) {
+        return 'R$ ##,##';
+      } else if (digitCount <= 5) {
+        return 'R$ ###,##';
+      } else if (digitCount <= 6) {
+        return 'R$ #.###,##';
+      } else if (digitCount <= 7) {
+        return 'R$ ##.###,##';
+      } else if (digitCount <= 8) {
+        return 'R$ ###.###,##';
+      } else {
+        return 'R$ ###.###.###,##';
+      }
+    },
+  },
   created() {
-    this.getItensServico()
     this.getServico(this.$route.params.id)
   },
   methods: {
-    async getitensServico() {
-      const response = await this.$api.list({
-        resource: this.$endpoints.SERVICO_ITEM
-      })
-      this.itensServico = response.data.results
+    toUpperCase(field) {
+      if (this.servico[field] && typeof this.servico[field] === 'string') {
+        this.servico[field] = this.servico[field].toUpperCase();
+      }
     },
     async getServico(id) {
       const response = await this.$api.get({
         resource: this.$endpoints.SERVICO,
         id: id
       })
+      const funcionarioResponse = await this.$api.list({ 
+        resource: this.$endpoints.FUNCIONARIO,
+        id: id
+       });
+      const itensResponse = await this.$api.list({ 
+        resource: this.$endpoints.SERVICO_ITEM,
+        id:  id
+      });
+      const clienteResponse = await this.$api.list({ 
+        resource: this.$endpoints.CLIENTE,
+        id: id
+      });
+
+      this.clientes = clienteResponse.data.results;
+      this.itensServico = itensResponse.data.results;
+      this.funcionarios = funcionarioResponse.data.results;
+
       this.servico = response.data
-      this.getVeiculo(this.servico.veiculo)
-      this.getEquipamento(this.servico.equipamento)
+
+      if (this.servico.veiculo) {
+        this.getVeiculo(this.servico.veiculo);
+      } else if (this.servico.equipamento) {
+        this.getEquipamento(this.servico.equipamento);
+      } 
     },
     async getVeiculo(id) {
       const response = await this.$api.get({
@@ -216,7 +255,8 @@ export default {
       })
       this.equipamento = response.data
     },
-    salvar() {
+    async salvar() {
+      this.servico.preco = (this.servico.preco || "").replace(/[^\d,]/g, "").replace(",", ".").replace(/(\.\d{0,2})\d*$/, "$1");
       const response = this.$api.update({
         resource: this.$endpoints.SERVICO,
         id: this.servico.id,
