@@ -123,17 +123,6 @@
           <v-col
             cols="12"
             sm="12"
-            md="9"
-          >
-            <v-text-field
-              v-model="equipamento.restricoes"
-              label="Restrições"
-              :error-messages="errors.restricoes"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
             md="1"
           >
             <v-text-field
@@ -170,11 +159,22 @@
           <v-col
             cols="12"
             sm="12"
-            md="3"
+          >
+            <v-textarea
+              v-model="equipamento.restricoes"
+              label="Restrições"
+              filled
+              :error-messages="errors.restricoes"
+            />
+          </v-col>
+          <v-col
+            cols="12"
+            sm="12"
           >
             <v-textarea
               v-model="equipamento.observacao"
               label="Observações"
+              filled
               class="required"
               :error-messages="errors.observacao"
               multi-line
