@@ -200,13 +200,12 @@
               v-model="funcionario.foto"
               label="Foto"
               :error-messages="errors.foto"
-              accept="image/*"
             />
             <img
               v-if="funcionario.foto"
               :src="fotoURL"
               alt="Foto do funcionário"
-              style="max-width: 100%; margin-top: 10px;"
+              style="max-width: 50%; margin-top: 10px;"
             >
           </v-col>
         </v-row>
@@ -261,20 +260,25 @@ export default {
       salario: '',
       data_admissao: '',
       data_nascimento: '',
+      cep:'',
       endereco: '',
       complemento: '',
       bairro: '',
+      numero: '',
       municipio: '',
       uf: '',
       telefone: '',
-      foto: null,
     },
     errors: {},
     disabledEndereco: true,
   }),
   computed: {
     fotoURL() {
-      return this.funcionario.foto ? URL.createObjectURL(this.funcionario.foto) : '';
+      if (this.funcionario.foto instanceof File) {
+        return URL.createObjectURL(this.funcionario.foto);
+      } else {
+        return '';
+      }
     }
   },
   methods: {
@@ -285,9 +289,28 @@ export default {
       const salarioNumerico = parseFloat(this.funcionario.salario.replace(/\D/g, ''));
       this.funcionario.salario = salarioNumerico / 100;
       
+      const formData = new FormData();
+      formData.append('nome', this.funcionario.nome);
+      formData.append('numero_documento', this.funcionario.numero_documento);
+      formData.append('cargo', this.funcionario.cargo);
+      formData.append('salario', this.funcionario.salario);
+      formData.append('data_admissao', this.funcionario.data_admissao);
+      formData.append('data_nascimento', this.funcionario.data_nascimento);
+      formData.append('endereco', this.funcionario.endereco);
+      formData.append('cep', this.funcionario.cep);
+      formData.append('numero', this.funcionario.numero);
+      formData.append('complemento', this.funcionario.complemento);
+      formData.append('bairro', this.funcionario.bairro);
+      formData.append('municipio', this.funcionario.municipio);
+      formData.append('uf', this.funcionario.uf);
+      formData.append('telefone', this.funcionario.telefone);
+      if (this.funcionario.foto) {
+        formData.append('foto', this.funcionario.foto);
+      }
+
       const response = this.$api.create({
         resource: this.$endpoints.FUNCIONARIO,
-        data: this.funcionario
+        data: formData
       })
       response
         .then(()=>{

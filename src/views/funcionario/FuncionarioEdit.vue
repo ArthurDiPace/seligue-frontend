@@ -189,11 +189,10 @@
               v-model="funcionario.foto"
               label="Foto"
               :error-messages="errors.foto"
-              accept="image/*"
             />
             <img
               v-if="funcionario.foto"
-              :src="fotoURL"
+              :src="fotoURL || funcionario.foto"
               alt="Foto do funcionário"
               style="max-width: 100%; margin-top: 10px;"
             >
@@ -251,7 +250,11 @@ export default {
   }),
   computed: {
     fotoURL() {
-      return this.funcionario.foto ? URL.createObjectURL(this.funcionario.foto) : '';
+      if (this.funcionario.foto instanceof File) {
+        return URL.createObjectURL(this.funcionario.foto);
+      } else {
+        return '';
+      }
     }
   },
   created() {
@@ -272,10 +275,29 @@ export default {
       const salarioNumerico = parseFloat(this.funcionario.salario.replace(/\D/g, ''));
       this.funcionario.salario = salarioNumerico / 100;
       
+      const formData = new FormData();
+      formData.append('nome', this.funcionario.nome);
+      formData.append('numero_documento', this.funcionario.numero_documento);
+      formData.append('cargo', this.funcionario.cargo);
+      formData.append('salario', this.funcionario.salario);
+      formData.append('data_admissao', this.funcionario.data_admissao);
+      formData.append('data_nascimento', this.funcionario.data_nascimento);
+      formData.append('endereco', this.funcionario.endereco);
+      formData.append('cep', this.funcionario.cep);
+      formData.append('numero', this.funcionario.numero);
+      formData.append('complemento', this.funcionario.complemento);
+      formData.append('bairro', this.funcionario.bairro);
+      formData.append('municipio', this.funcionario.municipio);
+      formData.append('uf', this.funcionario.uf);
+      formData.append('telefone', this.funcionario.telefone);
+      if (this.funcionario.foto) {
+        formData.append('foto', this.funcionario.foto);
+      }
+      
       const response = this.$api.update({
         resource: this.$endpoints.FUNCIONARIO,
         id: this.funcionario.id,
-        data: this.funcionario
+        data: formData
       })
       response
         .then(()=>{
