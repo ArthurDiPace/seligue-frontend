@@ -11,6 +11,8 @@ const routeOptions = [
   { path: 'equipamento/cadastrar', name: 'equipamento/EquipamentoCreate' },
   { path: 'equipamento/:id', name: 'equipamento/EquipamentoEdit' },
   
+  { path: 'equipamento/servico/:id', name: 'servico/ServicoEquip' },
+  
   { path: 'contrato', name: 'contrato/ContratoList' },
 
   { path: 'cliente', name: 'cliente/ClienteList' },

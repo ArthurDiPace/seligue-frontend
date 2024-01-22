@@ -10,158 +10,300 @@
         <v-row dense>
           <v-col
             cols="12"
-            md="4"
             sm="12"
           >
-            <v-autocomplete
-              v-model="servico.itens"
-              label="Serviço"
-              :items="itensServico"
-              :error-messages="errors.observacao"
-              multiple 
-              item-text="descricao"
-              item-value="id"
+            <v-switch
+              v-model="servico.servico_cliente"
+              label="Equipamento Cliente"
             />
           </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-          >
-            <v-textarea
-              v-model="servico.observacao"
-              label="Observação do serviço"
-              :error-messages="errors.observacao" 
-              @input="toUpperCase('observacao')"       
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="4"
-            sm="12"
-          >
-            <v-autocomplete
-              v-model="servico.cliente"
-              label="Cliente"
-              :items="clientes"
-              item-text="nome"
-              item-value="id"
-              :error-messages="errors.cliente"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-          >
-            <v-text-field
-              v-model="servico.preco"
-              v-mask="dynamicMask"
-              label="Valor do serviço"
-              :error-messages="errors.preco"        
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-          >
-            <v-radio-group
-              v-model="servico.categoria"
-              row
-              :error-messages="errors.categoria"
-            >
-              <v-radio
-                label="Veiculo"
-                value="veiculo"
-              />
-              <v-radio
-                label="Equipamento"
-                value="equipamento"
-              />
-            </v-radio-group>
+          <template v-if="servico.servico_cliente">
             <v-col
-              v-if="servico.categoria=='equipamento'"
               cols="12"
               md="4"
               sm="12"
             >
               <v-autocomplete
-                v-model="servico.equipamento"
-                label="Equipamento"
-                :error-messages="errors.equipamento"
-                :items="equipamentos"
-                :item-text="formatarTexto"
+                v-model="servico.itens"
+                label="Serviço"
+                :items="itensServico"
+                :error-messages="errors.itens"
+                multiple 
+                item-text="descricao"
                 item-value="id"
               />
             </v-col>
             <v-col
-              v-if="servico.categoria=='veiculo'"
               cols="12"
               md="4"
               sm="12"
             >
               <v-autocomplete
-                v-model="servico.veiculo"
-                label="Veiculo"
-                :error-messages="errors.veiculo"
-                :items="veiculos"
-                :item-text="formatarTexto"
+                v-model="servico.cliente"
+                label="Cliente"
+                :items="clientes"
+                item-text="nome"
+                item-value="id"
+                :error-messages="errors.cliente"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="4"
+            >
+              <v-text-field
+                v-model="servico.preco"
+                v-mask="dynamicMask"
+                label="Valor do serviço"
+                :error-messages="errors.preco"        
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+            >
+              <v-radio-group
+                v-model="servico.categoria"
+                row
+                :error-messages="errors.categoria"
+              >
+                <v-radio
+                  label="Veiculo"
+                  value="veiculo"
+                />
+                <v-radio
+                  label="Equipamento"
+                  value="equipamento"
+                />
+              </v-radio-group>
+              <v-col
+                v-if="servico.categoria=='equipamento'"
+                cols="12"
+                md="4"
+                sm="12"
+              >
+                <v-autocomplete
+                  v-model="servico.equipamento"
+                  label="Equipamento"
+                  :error-messages="errors.equipamento"
+                  :items="equipamentos"
+                  :item-text="formatarTexto"
+                  item-value="id"
+                />
+              </v-col>
+              <v-col
+                v-if="servico.categoria=='veiculo'"
+                cols="12"
+                md="4"
+                sm="12"
+              >
+                <v-autocomplete
+                  v-model="servico.veiculo"
+                  label="Veiculo"
+                  :error-messages="errors.veiculo"
+                  :items="veiculos"
+                  :item-text="formatarTexto"
+                  item-value="id"
+                />
+              </v-col>
+            </v-col>
+            <v-col
+              cols="12"
+              md="3"
+              sm="12"
+            >
+              <v-text-field
+                v-model="servico.data"
+                v-mask="['##/##/####']"
+                label="Data de Entrada"
+                class="required"
+                :error-messages="errors.data"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              md="3"
+              sm="12"
+            >
+              <v-text-field
+                v-model="servico.data_saida"
+                v-mask="['##/##/####']"
+                label="Data de Saida"
+                class="required"
+                :error-messages="errors.data_saida"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="4"
+            >
+              <v-autocomplete
+                v-model="servico.parecer"
+                :items="status"
+                item-text="text"
+                item-value="value"
+                label="Parecer"
+                :error-messages="errors.parecer"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="4"
+            >
+              <v-autocomplete
+                v-model="servico.funcionario"
+                label="Funcionário (Serviço)"
+                :items="funcionarios"
+                item-text="nome"
+                item-value="id"
+                :error-messages="errors.funcionario"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+            >
+              <v-textarea
+                v-model="servico.observacao"
+                label="Observação do serviço"
+                :error-messages="errors.observacao" 
+                @input="toUpperCase('observacao')"       
+              />
+            </v-col>
+          </template>
+          <template v-else>
+            <v-col
+              cols="12"
+              md="4"
+              sm="12"
+            >
+              <v-autocomplete
+                v-model="servico.itens"
+                label="Serviço"
+                :items="itensServico"
+                :error-messages="errors.observacao"
+                multiple 
+                item-text="descricao"
                 item-value="id"
               />
             </v-col>
-          </v-col>
-          <v-col
-            cols="12"
-            md="3"
-            sm="12"
-          >
-            <v-text-field
-              v-model="servico.data"
-              v-mask="['##/##/####']"
-              label="Data de Entrada"
-              class="required"
-              :error-messages="errors.data"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            md="3"
-            sm="12"
-          >
-            <v-text-field
-              v-model="servico.data_saida"
-              v-mask="['##/##/####']"
-              label="Data de Saida"
-              class="required"
-              :error-messages="errors.data_saida"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="4"
-          >
-            <v-autocomplete
-              v-model="servico.parecer"
-              :items="status"
-              item-text="text"
-              item-value="value"
-              label="Parecer"
-              :error-messages="errors.parecer"
-            />
-          </v-col>
-          <v-col
-            cols="12"
-            sm="12"
-            md="4"
-          >
-            <v-autocomplete
-              v-model="servico.funcionario"
-              label="Funcionário (Serviço)"
-              :items="funcionarios"
-              item-text="nome"
-              item-value="id"
-              :error-messages="errors.funcionario"
-            />
-          </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="4"
+            >
+              <v-autocomplete
+                v-model="servico.funcionario"
+                label="Funcionário (Serviço)"
+                :items="funcionarios"
+                item-text="nome"
+                item-value="id"
+                :error-messages="errors.funcionario"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+            >
+              <v-radio-group
+                v-model="servico.categoria"
+                row
+                :error-messages="errors.categoria"
+              >
+                <v-radio
+                  label="Veiculo"
+                  value="veiculo"
+                />
+                <v-radio
+                  label="Equipamento"
+                  value="equipamento"
+                />
+              </v-radio-group>
+              <v-col
+                v-if="servico.categoria=='equipamento'"
+                cols="12"
+                md="4"
+                sm="12"
+              >
+                <v-autocomplete
+                  v-model="servico.equipamento"
+                  label="Equipamento"
+                  :error-messages="errors.equipamento"
+                  :items="equipamentos"
+                  :item-text="formatarTexto"
+                  item-value="id"
+                />
+                <v-text-field
+                  v-model="servico.horimetro"
+                  label="Horimetro"
+                  class="required"
+                  :error-messages="errors.horimetro"
+                />
+              </v-col>
+              <v-col
+                v-if="servico.categoria=='veiculo'"
+                cols="12"
+                md="4"
+                sm="12"
+              >
+                <v-autocomplete
+                  v-model="servico.veiculo"
+                  label="Veiculo"
+                  :error-messages="errors.veiculo"
+                  :items="veiculos"
+                  :item-text="formatarTexto"
+                  item-value="id"
+                />
+                <v-text-field
+                  v-model="servico.odometro"
+                  label="Odometro"
+                  class="required"
+                  :error-messages="errors.odometro"
+                />
+              </v-col>
+            </v-col>
+            <v-col
+              cols="12"
+              md="3"
+              sm="12"
+            >
+              <v-text-field
+                v-model="servico.data"
+                v-mask="['##/##/####']"
+                label="Data do Serviço"
+                class="required"
+                :error-messages="errors.data"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+              md="4"
+            >
+              <v-autocomplete
+                v-model="servico.parecer"
+                :items="status"
+                item-text="text"
+                item-value="value"
+                label="Parecer"
+                :error-messages="errors.parecer"
+              />
+            </v-col>
+            <v-col
+              cols="12"
+              sm="12"
+            >
+              <v-textarea
+                v-model="servico.observacao"
+                label="Observação do serviço"
+                :error-messages="errors.observacao" 
+                @input="toUpperCase('observacao')"       
+              />
+            </v-col>
+          </template>
         </v-row>
       </v-card-text>
       <v-card-actions>

@@ -3,7 +3,30 @@
     <s-pagebar
       page-title="Editar Equipamento"
       :breadcrumbs="breadcrumbs"
-    />
+    >
+      <v-menu offset-y>
+        <template #activator="{ on, attrs }">
+          <v-btn
+            color="blue-grey darken-4"
+            dark
+            fab
+            small
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>more_vert</v-icon>
+          </v-btn>
+        </template>
+        <v-list>
+          <v-list-item
+            link
+            :to="`servico/${equipamento.id}`"
+          >
+            <v-list-item-title>Visualizar Serviços</v-list-item-title>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+    </s-pagebar>
     <v-card flat>
       <v-card-text>
         <v-row dense>
@@ -247,7 +270,6 @@ export default {
         id: id
       })
       this.equipamento = response.data
-      console.log(response.data)
     },
     async salvar() {
       this.equipamento.status = this.equipamento.status.toLowerCase();

@@ -18,6 +18,13 @@
       <v-card-text>
         <div class="d-flex align-center">
           <div style="max-width: 200px">
+            <v-text-field
+              v-model="filtro.equipamento"
+              label="Número"
+              class="mr-3"
+            />
+          </div>
+          <div style="max-width: 200px">
             <v-autocomplete
               v-model="filtro.categoria"
               label="Categoria"
@@ -173,10 +180,12 @@
       items: [],
       options: {},
       filtro: {
+        equipamento: '',
         categoria: '',
         parecer: '',
       },
       filtroAnterior: {
+        equipamento: null,
         categoria: null,
         parecer: null,
       },
@@ -200,8 +209,10 @@
         }
 
         if (
+          this.filtro.equipamento !== this.filtroAnterior.equipamento ||
           this.filtro.categoria !== this.filtroAnterior.categoria ||
           this.filtro.parecer !== this.filtroAnterior.parecer
+
         ) {
           resetPage = true;
           this.options.page = 1;
@@ -214,6 +225,7 @@
           page: resetPage ? 1 : page,
           page_size: itemsPerPage,
           ordering: ordering,
+          equipamento: this.filtro.equipamento,
           categoria: this.filtro.categoria,
           parecer: this.filtro.parecer,
         }
@@ -232,6 +244,7 @@
       },
       limparFiltros() {
         this.filtro = {
+          equipamento: null,
           categoria: null,
           parecer: null
         }

@@ -136,10 +136,10 @@ export default {
       {text: 'Marca/Modelo', value: 'marca_modelo'},
       {text: "Status", value: "status" },
       {text: "Potência", value: "potencia" },
-      {text: "Horímetro/Odômetro", value: "horimetro"},
+      {text: "Horímetro", value: "horimetro"},
       {text: "Observações", value: "observacao" },
       {text: 'Ações', value: 'action'},
-      ],
+    ],
     categoria:{},
     id:{},
     filtro: {
