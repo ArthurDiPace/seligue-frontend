@@ -209,6 +209,13 @@
               @input="toUpperCase('observacao')"
             />
           </v-col>
+          <v-col 
+            cols="12" 
+            sm="12" 
+            md="6"
+          >
+            <img :src="qrCodeUrl" alt="QR Code"/>
+          </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>
@@ -281,6 +288,11 @@ export default {
   }),
   created() {
     this.getVeiculo(this.$route.params.id)
+  },
+  computed: {
+    qrCodeUrl() {
+      return `data:image/png;base64, ${this.veiculo.qr_code}`;
+    },
   },
   methods: {
     async getVeiculo(id) {

@@ -204,6 +204,13 @@
               rows="5"
             />
           </v-col>
+          <v-col 
+            cols="12" 
+            sm="12" 
+            md="6"
+          >
+            <img :src="qrCodeUrl" alt="QR Code"/>
+          </v-col>
         </v-row>
       </v-card-text>
       <v-card-actions>
@@ -262,6 +269,11 @@ export default {
   async created() {
     await this.getEquipamento(this.$route.params.id);
     this.equipamento.status = this.equipamento.status.toUpperCase();
+  },
+  computed: {
+    qrCodeUrl() {
+      return `data:image/png;base64, ${this.equipamento.qr_code}`;
+    },
   },
   methods: {
     async getEquipamento(id) {
